@@ -1,4 +1,4 @@
-// copy into Processing
+// Copy into Processing
 
 import peasy.*;
 import java.lang.*;
