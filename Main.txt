@@ -1,0 +1,90 @@
+// copy into Processing
+
+import peasy.*;
+import java.lang.*;
+PeasyCam P;
+int[][] edges = {{1,0,0},{2,0,1},{1,0,2},{0,0,1},{1,2,0},{2,2,1},{1,2,2},{0,2,1},{0,1,0},{2,1,0},{2,1,2},{0,1,2}};
+int[][] corners = {{0,0,0},{1,0,0},{1,0,1},{0,0,1},{0,1,0},{1,1,0},{1,1,1},{0,1,1}};
+int[][] tritable = a.b();
+int index = 0;
+int size = 10;
+int[][][] points = new int[size][size][size];
+
+void setup(){
+   size(600,600,P3D);
+   P = new PeasyCam(this,90);
+   P.lookAt(size/2*20,size/2*20,size/2*20);
+   for(int i = 1; i < points.length-1; i++){
+     for(int j = 1; j < points.length-1; j++){
+       for(int k = 1; k < points.length-1; k++){
+         int a = (int) random(0,256);
+         points[i][j][k] = a/160;
+       }
+     }  
+   }
+}
+
+int getInOut(int xoff,int yoff,int zoff){
+  int a = points[corners[0][0]+xoff][corners[0][1]+yoff][corners[0][2]+zoff];
+  int b = points[corners[1][0]+xoff][corners[1][1]+yoff][corners[1][2]+zoff];
+  int c = points[corners[2][0]+xoff][corners[2][1]+yoff][corners[2][2]+zoff];
+  int d = points[corners[3][0]+xoff][corners[3][1]+yoff][corners[3][2]+zoff];
+  int e = points[corners[4][0]+xoff][corners[4][1]+yoff][corners[4][2]+zoff];
+  int f = points[corners[5][0]+xoff][corners[5][1]+yoff][corners[5][2]+zoff];
+  int g = points[corners[6][0]+xoff][corners[6][1]+yoff][corners[6][2]+zoff];
+  int h = points[corners[7][0]+xoff][corners[7][1]+yoff][corners[7][2]+zoff];
+  return a*1+b*2+c*4+d*8+e*16+f*32+g*64+h*128;
+}
+
+void draw(){
+  //
+  //noFill();
+  fill(100);
+    background(255);
+  stroke(0,0,0);
+  strokeWeight(5);
+  for(int i = 0; i < edges.length; i++){
+    //point(edges[i][0]*10,edges[i][1]*10,edges[i][2]*10);
+  }
+  for(int i = 0; i < points.length; i++){
+     for(int j = 0; j < points.length; j++){
+       for(int k = 0; k < points.length; k++){
+         pushMatrix();
+         translate(i*20,j*20,k*20);
+         stroke(0,255,0);
+         if(points[i][j][k]==1){
+           stroke(0,0,255);  
+         }
+         //point(0,0,0);
+         popMatrix();
+       }
+     }
+  }
+  stroke(0);
+  for(int i = 0; i < points.length-1; i++){
+     for(int j = 0; j < points.length-1; j++){
+       for(int k = 0; k < points.length-1; k++){
+        int h = getInOut(i,j,k);
+          for(int f = 0; f < tritable[h].length-1; f+=3){
+              beginShape();
+              int a = tritable[h][f];
+              int b = tritable[h][f+1];
+              int c = tritable[h][f+2];
+              if(a==-1 || b==-1 || c==-1){
+                break;
+              }
+              vertex(edges[a][0]*10+(20*i),edges[a][1]*10+(20*j),edges[a][2]*10+(20*k));
+              vertex(edges[b][0]*10+(20*i),edges[b][1]*10+(20*j),edges[b][2]*10+(20*k));
+              vertex(edges[c][0]*10+(20*i),edges[c][1]*10+(20*j),edges[c][2]*10+(20*k));
+              vertex(edges[a][0]*10+(20*i),edges[a][1]*10+(20*j),edges[a][2]*10+(20*k));
+              
+              endShape();
+          }
+       }
+     }
+  }
+  
+  
+  //delay(1000);
+  index++;
+}
